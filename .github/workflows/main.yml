@@ -1,0 +1,36 @@
+name: Terraform CI/CD Pipeline
+
+# Trigger : quand exécuter ce pipeline
+on:
+  push:
+    branches:
+      - main
+
+# Définition du job
+jobs:
+  terraform:
+    name: Terraform Deployment
+    runs-on: ubuntu-latest
+
+    steps:
+      # Étape 1 : Récupérer le code du repository
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Étape 2 : Installer Terraform
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.5.0
+
+      # Étape 3 : Initialiser Terraform
+      - name: Terraform Init
+        run: terraform init
+
+      # Étape 4 : Planifier le déploiement
+      - name: Terraform Plan
+        run: terraform plan
+
+      # Étape 5 : Appliquer les changements (uniquement si Plan réussit)
+      - name: Terraform Apply
+        run: terraform apply -auto-approve
