@@ -1,0 +1,22 @@
+# Utilise une image de base très légère (Alpine)
+FROM alpine:latest
+
+# Installation de Nginx
+RUN apk add --no-cache nginx
+
+# Créer les répertoires nécessaires
+RUN mkdir -p /run/nginx /var/www/html
+
+# Création de la page HTML
+RUN echo "<h1>Application Deployed via Terraform IaC!</h1>" > /var/www/html/index.html
+
+# Configuration minimale de Nginx
+RUN echo -e "server {\n\
+    listen 80;\n\
+    root /var/www/html;\n\
+    index index.html;\n\
+}" > /etc/nginx/http.d/default.conf
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]
